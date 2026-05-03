@@ -1,0 +1,659 @@
+/* ========================================
+   闪闪-pika 歌单网站 - 海洋清新风格
+   ======================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+:root {
+    --ocean-deep: #023e8a;
+    --ocean: #0077b6;
+    --ocean-mid: #0096c7;
+    --ocean-light: #00b4d8;
+    --teal: #48cae4;
+    --sky: #90e0ef;
+    --foam: #caf0f8;
+    --white: #ffffff;
+    --sand: #fef9ef;
+    --text: #2b2d42;
+    --text-light: #6c757d;
+    --card-shadow: 0 4px 24px rgba(0, 119, 182, 0.12);
+    --card-shadow-hover: 0 8px 36px rgba(0, 119, 182, 0.18);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(180deg, #e0f7fa 0%, #ffffff 30%, #f0fcff 70%, #e0f7fa 100%);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* ========================================
+   波浪动画
+   ======================================== */
+
+.wave-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.wave-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.wave-top svg,
+.wave-bottom svg {
+    width: 100%;
+    height: 100%;
+}
+
+.wave-path {
+    fill: var(--sky);
+    opacity: 0.35;
+    animation: waveMove 8s ease-in-out infinite;
+}
+
+.wave-path-2 {
+    fill: var(--teal);
+    opacity: 0.25;
+    animation: waveMove 10s ease-in-out infinite reverse;
+}
+
+@keyframes waveMove {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-2%); }
+}
+
+/* ========================================
+   主容器
+   ======================================== */
+
+.main-container {
+    position: relative;
+    z-index: 1;
+    padding-top: 60px;
+    padding-bottom: 80px;
+    max-width: 1000px;
+}
+
+/* ========================================
+   头部 / Hero
+   ======================================== */
+
+.hero {
+    padding: 20px 0 10px;
+    position: relative;
+}
+
+.avatar-container {
+    margin-bottom: 16px;
+}
+
+.avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ocean-light), var(--teal), var(--sky));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0, 180, 216, 0.35);
+    animation: floatAvatar 4s ease-in-out infinite;
+}
+
+.avatar-text {
+    font-size: 36px;
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes floatAvatar {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.15); }
+}
+
+.hero-title {
+    font-size: 2.4rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--ocean-deep), var(--ocean-mid), var(--ocean-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+    letter-spacing: 2px;
+}
+
+.hero-subtitle {
+    font-size: 1.05rem;
+    color: var(--ocean);
+    font-weight: 400;
+    letter-spacing: 4px;
+    opacity: 0.8;
+}
+
+.hero-decorations {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 120px;
+    pointer-events: none;
+}
+
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, rgba(144, 224, 239, 0.6), rgba(0, 180, 216, 0.15));
+    animation: rise 6s ease-in-out infinite;
+}
+
+.b1 { width: 16px; height: 16px; left: 5%; top: 30%; animation-delay: 0s; }
+.b2 { width: 10px; height: 10px; left: 85%; top: 50%; animation-delay: 1.5s; }
+.b3 { width: 12px; height: 12px; left: 40%; top: 10%; animation-delay: 3s; }
+
+.shell {
+    position: absolute;
+    left: 10%;
+    top: 60%;
+    font-size: 18px;
+    animation: float 5s ease-in-out infinite;
+}
+
+.starfish {
+    position: absolute;
+    right: 10%;
+    top: 65%;
+    font-size: 16px;
+    animation: float 5.5s ease-in-out infinite 1s;
+}
+
+@keyframes rise {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
+    50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-6px) rotate(8deg); }
+}
+
+/* ========================================
+   Bilibili 链接
+   ======================================== */
+
+.bilibili-links {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.bili-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 24px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.bili-space {
+    background: rgba(251, 114, 153, 0.12);
+    color: #fb7299;
+    border: 1px solid rgba(251, 114, 153, 0.25);
+}
+
+.bili-space:hover {
+    background: rgba(251, 114, 153, 0.22);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(251, 114, 153, 0.2);
+    color: #fb7299;
+}
+
+.bili-live {
+    background: rgba(0, 180, 216, 0.12);
+    color: var(--ocean-mid);
+    border: 1px solid rgba(0, 180, 216, 0.25);
+}
+
+.bili-live:hover {
+    background: rgba(0, 180, 216, 0.22);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 180, 216, 0.2);
+    color: var(--ocean-mid);
+}
+
+/* ========================================
+   切换按钮栏
+   ======================================== */
+
+.toggle-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.toggle-btn {
+    padding: 10px 22px;
+    border-radius: 28px;
+    border: 2px solid rgba(0, 180, 216, 0.2);
+    background: var(--white);
+    color: var(--text-light);
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.5px;
+    font-family: inherit;
+}
+
+.toggle-btn:hover {
+    border-color: var(--ocean-light);
+    color: var(--ocean);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 180, 216, 0.15);
+}
+
+.toggle-btn.active {
+    background: linear-gradient(135deg, var(--ocean), var(--ocean-mid));
+    color: var(--white);
+    border-color: transparent;
+    box-shadow: 0 4px 20px rgba(0, 119, 182, 0.35);
+}
+
+.toggle-icon {
+    font-size: 1.05rem;
+}
+
+.refresh-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 180, 216, 0.2);
+    background: var(--white);
+    color: var(--text-light);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.refresh-btn:hover {
+    border-color: var(--ocean-light);
+    color: var(--ocean);
+    transform: rotate(180deg);
+    box-shadow: 0 4px 16px rgba(0, 180, 216, 0.15);
+}
+
+/* ========================================
+   翻页动画容器
+   ======================================== */
+
+.flip-container {
+    perspective: 1200px;
+    transition: transform 0.45s ease;
+}
+
+.flip-container.flipping {
+    transform: rotateY(90deg);
+}
+
+/* ========================================
+   歌单卡片
+   ======================================== */
+
+.playlist-card {
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0, 180, 216, 0.1);
+    height: 100%;
+}
+
+.playlist-card:hover {
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-3px);
+}
+
+.card-header-custom {
+    background: linear-gradient(135deg, var(--ocean), var(--ocean-mid));
+    padding: 22px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-custom::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+#skilled-card .card-header-custom {
+    background: linear-gradient(135deg, #00b4d8, #48cae4);
+}
+
+.card-icon {
+    font-size: 30px;
+    line-height: 1;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+.card-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--white);
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+.card-desc {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 2px 0 0;
+}
+
+.card-source {
+    margin-left: auto;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.65);
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.card-body-custom {
+    padding: 16px 20px;
+    min-height: 200px;
+    position: relative;
+}
+
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 0;
+    gap: 12px;
+}
+
+.loading-text {
+    color: var(--ocean-mid);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.track-count {
+    display: none;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.track-count span {
+    color: var(--ocean);
+    font-weight: 700;
+}
+
+/* ========================================
+   歌曲列表
+   ======================================== */
+
+.track-list {
+    display: none;
+    max-height: 520px;
+    overflow-y: auto;
+}
+
+.track-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.track-list::-webkit-scrollbar-track {
+    background: var(--foam);
+    border-radius: 10px;
+}
+
+.track-list::-webkit-scrollbar-thumb {
+    background: var(--ocean-light);
+    border-radius: 10px;
+}
+
+.track-item {
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    cursor: default;
+    border-bottom: 1px solid rgba(0, 180, 216, 0.06);
+}
+
+.track-item:last-child {
+    border-bottom: none;
+}
+
+.track-item:hover {
+    background: linear-gradient(90deg, rgba(202, 240, 248, 0.4), rgba(144, 224, 239, 0.15));
+    transform: translateX(3px);
+}
+
+.track-index {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--foam), var(--sky));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--ocean);
+    flex-shrink: 0;
+}
+
+.track-item:nth-child(1) .track-index {
+    background: linear-gradient(135deg, #ffb703, #ffd166);
+    color: #fff;
+    font-size: 0.85rem;
+}
+
+.track-item:nth-child(2) .track-index {
+    background: linear-gradient(135deg, #adb5bd, #ced4da);
+    color: #fff;
+}
+
+.track-item:nth-child(3) .track-index {
+    background: linear-gradient(135deg, #cd9776, #e8c39e);
+    color: #fff;
+}
+
+.track-info {
+    min-width: 0;
+}
+
+.track-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-artist {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 1px;
+}
+
+.track-album {
+    font-size: 0.72rem;
+    color: var(--text-light);
+    opacity: 0.7;
+    text-align: right;
+    white-space: nowrap;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+}
+
+.error-msg {
+    text-align: center;
+    padding: 40px 0;
+    color: #e63946;
+    font-size: 0.9rem;
+}
+
+/* ========================================
+   页脚
+   ======================================== */
+
+.footer-text {
+    color: var(--text-light);
+    font-size: 0.82rem;
+    opacity: 0.7;
+    letter-spacing: 1px;
+}
+
+/* ========================================
+   响应式 - 移动端适配
+   ======================================== */
+
+@media (max-width: 576px) {
+    .main-container {
+        padding-top: 40px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .hero-title {
+        font-size: 1.8rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.9rem;
+        letter-spacing: 3px;
+    }
+
+    .avatar {
+        width: 70px;
+        height: 70px;
+    }
+
+    .avatar-text {
+        font-size: 28px;
+    }
+
+    .card-title {
+        font-size: 1.15rem;
+    }
+
+    .card-header-custom {
+        padding: 16px 18px;
+    }
+
+    .card-body-custom {
+        padding: 12px 14px;
+    }
+
+    .track-item {
+        grid-template-columns: 28px 1fr auto;
+        gap: 8px;
+        padding: 10px 8px;
+    }
+
+    .track-index {
+        width: 24px;
+        height: 24px;
+        font-size: 0.7rem;
+    }
+
+    .track-name {
+        font-size: 0.88rem;
+    }
+
+    .track-artist {
+        font-size: 0.74rem;
+    }
+
+    .track-album {
+        font-size: 0.68rem;
+        max-width: 80px;
+    }
+
+    .wave-top,
+    .wave-bottom {
+        height: 120px;
+    }
+}
+
+@media (max-width: 375px) {
+    .hero-title {
+        font-size: 1.5rem;
+    }
+
+    .track-album {
+        display: none;
+    }
+
+    .track-item {
+        grid-template-columns: 28px 1fr;
+    }
+}
