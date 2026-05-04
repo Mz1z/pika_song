@@ -44,19 +44,18 @@ def _write_cache(playlist_type, data):
         pass
 
 
+API_URL = "https://music.163.com/api/playlist/detail?id={}"
+
+
 def _fetch_playlist_api(playlist_id):
-    for url in [
-        f"https://music.163.com/api/playlist/detail?id={playlist_id}",
-        f"https://music.163.com/api/v6/playlist/detail?id={playlist_id}",
-    ]:
-        try:
-            resp = requests.get(url, headers=HEADERS, timeout=10)
-            if resp.status_code == 200:
-                data = resp.json()
-                if data.get("code") == 200:
-                    return data["result"]
-        except Exception:
-            pass
+    try:
+        resp = requests.get(API_URL.format(playlist_id), headers=HEADERS, timeout=10)
+        if resp.status_code == 200:
+            data = resp.json()
+            if data.get("code") == 200 and "result" in data:
+                return data["result"]
+    except Exception:
+        pass
     return None
 
 
@@ -97,8 +96,8 @@ def get_playlist(playlist_type, force_refresh=False):
             tracks.append({
                 "id": str(track.get("id", "")),
                 "name": track.get("name", ""),
-                "artist": "/".join(a["name"] for a in track.get("ar", [])),
-                "album": track.get("al", {}).get("name", ""),
+                "artist": "/".join(a["name"] for a in track.get("artists", [])),
+                "album": track.get("album", {}).get("name", ""),
             })
         data = {
             "playlist_name": result.get("name", playlist_name),
