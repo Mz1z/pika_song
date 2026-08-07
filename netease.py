@@ -44,19 +44,71 @@ def _write_cache(playlist_type, data):
         pass
 
 
-API_URL = "https://music.163.com/api/playlist/detail?id={}"
+POST_HEADERS = {
+    **HEADERS,
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Origin": "https://music.163.com",
+}
 
 
 def _fetch_playlist_api(playlist_id):
+    """获取歌单完整数据。
+
+    1. POST /api/v6/playlist/detail 获取歌单信息及全部 trackIds
+    2. POST /api/v3/song/detail 按 trackIds 批量获取歌曲完整信息
+
+    返回 {playlist_name, track_count, tracks} 或 None
+    """
     try:
-        resp = requests.get(API_URL.format(playlist_id), headers=HEADERS, timeout=10)
-        if resp.status_code == 200:
-            data = resp.json()
-            if data.get("code") == 200 and "result" in data:
-                return data["result"]
+        detail_resp = requests.post(
+            "https://music.163.com/api/v6/playlist/detail",
+            data={"id": str(playlist_id), "n": "100000", "s": "8"},
+            headers=POST_HEADERS,
+            timeout=30,
+        )
+        detail = detail_resp.json()
+        if detail.get("code") != 200 or not detail.get("playlist"):
+            return None
+        playlist = detail["playlist"]
+        track_ids = [t["id"] for t in (playlist.get("trackIds") or [])]
+        if not track_ids:
+            return {
+                "playlist_name": playlist.get("name", ""),
+                "track_count": playlist.get("trackCount", 0),
+                "tracks": [],
+            }
+
+        songs = []
+        for i in range(0, len(track_ids), 200):
+            batch = track_ids[i:i + 200]
+            c = json.dumps([{"id": sid} for sid in batch])
+            song_resp = requests.post(
+                "https://music.163.com/api/v3/song/detail",
+                data={"c": c, "ids": json.dumps(batch)},
+                headers=POST_HEADERS,
+                timeout=30,
+            )
+            song_data = song_resp.json()
+            songs.extend(song_data.get("songs") or [])
+            if i + 200 < len(track_ids):
+                time.sleep(0.3)
+
+        tracks = []
+        for song in songs:
+            tracks.append({
+                "id": str(song.get("id", "")),
+                "name": song.get("name", ""),
+                "artist": "/".join(a.get("name", "") for a in (song.get("ar") or [])),
+                "album": (song.get("al") or {}).get("name", ""),
+            })
+
+        return {
+            "playlist_name": playlist.get("name", ""),
+            "track_count": playlist.get("trackCount", len(tracks)),
+            "tracks": tracks,
+        }
     except Exception:
-        pass
-    return None
+        return None
 
 
 def _get_test_data(playlist_name, tracks_count=10):
@@ -91,18 +143,10 @@ def get_playlist(playlist_type, force_refresh=False):
 
     result = _fetch_playlist_api(playlist_id)
     if result:
-        tracks = []
-        for track in result.get("tracks", []):
-            tracks.append({
-                "id": str(track.get("id", "")),
-                "name": track.get("name", ""),
-                "artist": "/".join(a["name"] for a in track.get("artists", [])),
-                "album": track.get("album", {}).get("name", ""),
-            })
         data = {
-            "playlist_name": result.get("name", playlist_name),
-            "track_count": result.get("trackCount", len(tracks)),
-            "tracks": tracks,
+            "playlist_name": result.get("playlist_name", playlist_name),
+            "track_count": result.get("track_count", len(result.get("tracks", []))),
+            "tracks": result.get("tracks", []),
             "source": "网易云音乐实时数据",
         }
     else:
