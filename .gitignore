@@ -33,3 +33,6 @@ cache/*.json
 # Local database
 data/*.db
 data/*.db-journal
+
+# Uploaded gallery images
+static/uploads/

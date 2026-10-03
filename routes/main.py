@@ -9,7 +9,7 @@ from flask import (
 )
 
 import database as db
-from config import GALLERY_ITEMS, LINK_DEFAULTS
+from config import LINK_DEFAULTS
 
 main_bp = Blueprint("main", __name__)
 
@@ -19,8 +19,8 @@ def index():
     return render_template(
         "index.html",
         active="home",
-        diary_entries=db.list_diary(only_published=True, limit=3),
-        gallery_items=GALLERY_ITEMS[:3],
+        diary_entries=db.list_diary(only_published=True, limit=5),
+        gallery_items=db.list_gallery()[:3],
     )
 
 
@@ -41,7 +41,7 @@ def playlist():
 
 @main_bp.route("/gallery")
 def gallery():
-    return render_template("gallery.html", active="gallery", items=GALLERY_ITEMS)
+    return render_template("gallery.html", active="gallery", items=db.list_gallery())
 
 
 @main_bp.route("/links")

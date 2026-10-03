@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}相册管理 · {{ site.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <span class="page-eyebrow">ADMIN</span>
+    <h1>相册管理</h1>
+    <p>添加、编辑或删除相册里的内容</p>
+</section>
+
+{% set admin_active = 'gallery' %}
+{% include "admin/_nav.html" %}
+
+<div class="admin-toolbar">
+    <a href="{{ url_for('admin.gallery_new') }}" class="sea-btn sea-btn-primary">
+        <i class="bi bi-plus-lg"></i> 新增相册内容
+    </a>
+</div>
+
+{% if items %}
+    <div class="admin-gallery-grid">
+        {% for item in items %}
+            <div class="admin-gallery-card">
+                <div class="admin-gallery-thumb"
+                     {% if not item.image %}style="background:{{ item.gradient or 'linear-gradient(135deg,#0077b6,#48cae4)' }}"{% endif %}>
+                    {% if item.image %}
+                        <img src="{{ item.image }}" alt="{{ item.title }}">
+                    {% else %}
+                        <span>{{ item.emoji }}</span>
+                    {% endif %}
+                </div>
+                <div class="admin-gallery-body">
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.description }}</p>
+                    <span class="admin-row-meta">排序 {{ item.sort_order }}</span>
+                    <div class="admin-gallery-actions">
+                        <a class="admin-action" href="{{ url_for('admin.gallery_edit', item_id=item.id) }}">编辑</a>
+                        <form method="post" action="{{ url_for('admin.gallery_delete', item_id=item.id) }}"
+                              onsubmit="return confirm('确定删除这条相册内容吗？');">
+                            <button class="admin-action admin-action-danger" type="submit">删除</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-sea"><span>🫧</span><p>相册还是空的，点击「新增相册内容」添加吧。</p></div>
+{% endif %}
+{% endblock %}

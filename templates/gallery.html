@@ -5,18 +5,22 @@
 <section class="page-head">
     <span class="page-eyebrow">GALLERY</span>
     <h1>相册</h1>
-    <p>立绘、表情包与深海海报（当前为占位素材）</p>
+    <p>立绘、表情包与深海海报</p>
 </section>
 
 <div class="gallery-grid">
     {% for item in items %}
-        <div class="gallery-item" style="--grad:{{ item.gradient }}">
+        <div class="gallery-item" {% if not item.image %}style="--grad:{{ item.gradient or 'linear-gradient(135deg,#0077b6,#48cae4)' }}"{% endif %}>
             <div class="gallery-thumb">
-                <span>{{ item.emoji }}</span>
+                {% if item.image %}
+                    <img src="{{ item.image }}" alt="{{ item.title }}">
+                {% else %}
+                    <span>{{ item.emoji }}</span>
+                {% endif %}
             </div>
             <div class="gallery-caption">
                 <h3>{{ item.title }}</h3>
-                <p>{{ item.desc }}</p>
+                <p>{{ item.description }}</p>
             </div>
         </div>
     {% endfor %}

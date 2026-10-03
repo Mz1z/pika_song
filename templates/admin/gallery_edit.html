@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ '编辑相册内容' if item else '新增相册内容' }} · {{ site.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <span class="page-eyebrow">ADMIN</span>
+    <h1>{{ '编辑相册内容' if item else '新增相册内容' }}</h1>
+    <p>可上传图片，也可填写外部图片地址；不填图片时显示 emoji 与渐变背景</p>
+</section>
+
+{% set admin_active = 'gallery' %}
+{% include "admin/_nav.html" %}
+
+<form class="admin-form" method="post" enctype="multipart/form-data">
+    <label class="board-label">标题</label>
+    <input class="board-input" type="text" name="title" maxlength="120" required
+           value="{{ item.title if item else '' }}">
+
+    <label class="board-label">描述</label>
+    <input class="board-input" type="text" name="description" maxlength="200"
+           value="{{ item.description if item else '' }}">
+
+    <div class="admin-form-grid">
+        <div>
+            <label class="board-label">Emoji（无图片时显示）</label>
+            <input class="board-input" type="text" name="emoji" maxlength="8"
+                   value="{{ item.emoji if item else '🖼️' }}">
+        </div>
+        <div>
+            <label class="board-label">排序（数字越小越靠前）</label>
+            <input class="board-input" type="number" name="sort_order"
+                   value="{{ item.sort_order if item else 0 }}">
+        </div>
+    </div>
+
+    <label class="board-label">渐变背景（CSS，可留空使用默认）</label>
+    <input class="board-input" type="text" name="gradient"
+           placeholder="linear-gradient(135deg,#0077b6,#48cae4)"
+           value="{{ item.gradient if item else '' }}">
+
+    <label class="board-label">图片地址（URL 或 static 路径，可留空）</label>
+    <input class="board-input" type="text" name="image"
+           placeholder="/static/images/pika.png 或 https://..."
+           value="{{ item.image if item else '' }}">
+
+    <label class="board-label">或上传图片（png / jpg / jpeg / gif / webp）</label>
+    <input class="board-input" type="file" name="image_file" accept="image/*">
+
+    {% if item and item.image %}
+        <div class="admin-current-image">
+            <span class="board-label">当前图片</span>
+            <img src="{{ item.image }}" alt="{{ item.title }}">
+        </div>
+    {% endif %}
+
+    <div class="admin-form-actions">
+        <button class="sea-btn sea-btn-primary" type="submit">
+            <i class="bi bi-save"></i> 保存
+        </button>
+        <a class="sea-btn sea-btn-ghost" href="{{ url_for('admin.gallery_list') }}">取消</a>
+    </div>
+</form>
+{% endblock %}

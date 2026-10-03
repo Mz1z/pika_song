@@ -1,4 +1,6 @@
 import hmac
+import os
+import uuid
 from functools import wraps
 
 from flask import (
@@ -12,7 +14,7 @@ from flask import (
 )
 
 import database as db
-from config import ADMIN_PASSWORD
+from config import ADMIN_PASSWORD, ALLOWED_IMAGE_EXT, UPLOAD_DIR
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -25,6 +27,49 @@ def login_required(view):
         return view(*args, **kwargs)
 
     return wrapped
+
+
+def _save_gallery_image(file_storage):
+    if not file_storage or not file_storage.filename:
+        return ""
+    ext = os.path.splitext(file_storage.filename)[1].lower()
+    if ext not in ALLOWED_IMAGE_EXT:
+        return None
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+    filename = f"{uuid.uuid4().hex}{ext}"
+    file_storage.save(os.path.join(UPLOAD_DIR, filename))
+    return f"/static/uploads/gallery/{filename}"
+
+
+def _gallery_form_data():
+    title = (request.form.get("title") or "").strip()
+    if not title:
+        return None, "标题不能为空"
+
+    description = (request.form.get("description") or "").strip()
+    emoji = (request.form.get("emoji") or "🖼️").strip() or "🖼️"
+    gradient = (request.form.get("gradient") or "").strip()
+    try:
+        sort_order = int((request.form.get("sort_order") or "0").strip())
+    except ValueError:
+        sort_order = 0
+
+    image = (request.form.get("image") or "").strip()
+    upload = request.files.get("image_file")
+    if upload and upload.filename:
+        saved = _save_gallery_image(upload)
+        if saved is None:
+            return None, "图片格式仅支持 png / jpg / jpeg / gif / webp"
+        image = saved
+
+    return {
+        "title": title,
+        "description": description,
+        "emoji": emoji,
+        "image": image,
+        "gradient": gradient,
+        "sort_order": sort_order,
+    }, None
 
 
 @admin_bp.route("/login", methods=["GET", "POST"])
@@ -130,6 +175,52 @@ def message_delete(message_id):
     db.delete_message(message_id)
     flash("留言已删除", "success")
     return redirect(url_for("admin.messages"))
+
+
+@admin_bp.route("/gallery")
+@login_required
+def gallery_list():
+    return render_template("admin/gallery_list.html", items=db.list_gallery())
+
+
+@admin_bp.route("/gallery/new", methods=["GET", "POST"])
+@login_required
+def gallery_new():
+    if request.method == "POST":
+        data, error = _gallery_form_data()
+        if error:
+            flash(error, "error")
+        else:
+            db.create_gallery(**data)
+            flash("相册内容已添加", "success")
+            return redirect(url_for("admin.gallery_list"))
+    return render_template("admin/gallery_edit.html", item=None)
+
+
+@admin_bp.route("/gallery/<int:item_id>/edit", methods=["GET", "POST"])
+@login_required
+def gallery_edit(item_id):
+    item = db.get_gallery(item_id)
+    if not item:
+        flash("这条相册内容不存在", "error")
+        return redirect(url_for("admin.gallery_list"))
+    if request.method == "POST":
+        data, error = _gallery_form_data()
+        if error:
+            flash(error, "error")
+        else:
+            db.update_gallery(item_id, **data)
+            flash("相册内容已更新", "success")
+            return redirect(url_for("admin.gallery_list"))
+    return render_template("admin/gallery_edit.html", item=item)
+
+
+@admin_bp.route("/gallery/<int:item_id>/delete", methods=["POST"])
+@login_required
+def gallery_delete(item_id):
+    db.delete_gallery(item_id)
+    flash("相册内容已删除", "success")
+    return redirect(url_for("admin.gallery_list"))
 
 
 @admin_bp.route("/profile", methods=["GET", "POST"])

@@ -2,7 +2,7 @@ import os
 import sqlite3
 from datetime import datetime
 
-from config import DB_PATH, PROFILE_DEFAULTS
+from config import DB_PATH, GALLERY_ITEMS, PROFILE_DEFAULTS
 
 os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 
@@ -40,6 +40,17 @@ def init_db():
                 approved INTEGER DEFAULT 0,
                 created_at TEXT NOT NULL
             );
+
+            CREATE TABLE IF NOT EXISTS gallery (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                description TEXT DEFAULT '',
+                emoji TEXT DEFAULT '🖼️',
+                image TEXT DEFAULT '',
+                gradient TEXT DEFAULT 'linear-gradient(135deg,#0077b6,#48cae4)',
+                sort_order INTEGER DEFAULT 0,
+                created_at TEXT NOT NULL
+            );
             """
         )
         for key, value in PROFILE_DEFAULTS.items():
@@ -47,6 +58,21 @@ def init_db():
                 "INSERT OR IGNORE INTO profile (key, value) VALUES (?, ?)",
                 (key, value),
             )
+        if conn.execute("SELECT COUNT(*) AS c FROM gallery").fetchone()["c"] == 0:
+            for index, item in enumerate(GALLERY_ITEMS):
+                conn.execute(
+                    "INSERT INTO gallery (title, description, emoji, image, gradient, sort_order, created_at) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (
+                        item.get("title", ""),
+                        item.get("desc", ""),
+                        item.get("emoji", "🖼️"),
+                        "",
+                        item.get("gradient", ""),
+                        index,
+                        _now(),
+                    ),
+                )
         conn.commit()
     finally:
         conn.close()
@@ -194,6 +220,64 @@ def delete_message(message_id):
         conn.close()
 
 
+# ----------------------------- gallery -----------------------------
+
+def list_gallery():
+    conn = get_conn()
+    try:
+        rows = conn.execute(
+            "SELECT * FROM gallery ORDER BY sort_order ASC, id ASC"
+        ).fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def get_gallery(item_id):
+    conn = get_conn()
+    try:
+        row = conn.execute("SELECT * FROM gallery WHERE id = ?", (item_id,)).fetchone()
+        return dict(row) if row else None
+    finally:
+        conn.close()
+
+
+def create_gallery(title, description="", emoji="🖼️", image="", gradient="", sort_order=0):
+    conn = get_conn()
+    try:
+        cur = conn.execute(
+            "INSERT INTO gallery (title, description, emoji, image, gradient, sort_order, created_at) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (title, description, emoji, image, gradient, sort_order, _now()),
+        )
+        conn.commit()
+        return cur.lastrowid
+    finally:
+        conn.close()
+
+
+def update_gallery(item_id, title, description="", emoji="🖼️", image="", gradient="", sort_order=0):
+    conn = get_conn()
+    try:
+        conn.execute(
+            "UPDATE gallery SET title = ?, description = ?, emoji = ?, image = ?, "
+            "gradient = ?, sort_order = ? WHERE id = ?",
+            (title, description, emoji, image, gradient, sort_order, item_id),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def delete_gallery(item_id):
+    conn = get_conn()
+    try:
+        conn.execute("DELETE FROM gallery WHERE id = ?", (item_id,))
+        conn.commit()
+    finally:
+        conn.close()
+
+
 def stats():
     conn = get_conn()
     try:
@@ -202,10 +286,12 @@ def stats():
         msg_pending = conn.execute(
             "SELECT COUNT(*) AS c FROM messages WHERE approved = 0"
         ).fetchone()["c"]
+        gallery_count = conn.execute("SELECT COUNT(*) AS c FROM gallery").fetchone()["c"]
         return {
             "diary_count": diary_count,
             "message_total": msg_total,
             "message_pending": msg_pending,
+            "gallery_count": gallery_count,
         }
     finally:
         conn.close()

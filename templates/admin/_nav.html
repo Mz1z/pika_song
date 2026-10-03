@@ -8,6 +8,9 @@
     <a href="{{ url_for('admin.messages') }}" class="{% if admin_active == 'messages' %}active{% endif %}">
         <i class="bi bi-chat-dots"></i> 留言审核
     </a>
+    <a href="{{ url_for('admin.gallery_list') }}" class="{% if admin_active == 'gallery' %}active{% endif %}">
+        <i class="bi bi-images"></i> 相册
+    </a>
     <a href="{{ url_for('admin.profile') }}" class="{% if admin_active == 'profile' %}active{% endif %}">
         <i class="bi bi-person-gear"></i> 基本资料
     </a>

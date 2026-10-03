@@ -55,10 +55,13 @@ LINK_DEFAULTS = [
 ]
 
 GALLERY_ITEMS = [
-    {"title": "深海初见", "desc": "闪闪的第一张立绘（占位）", "emoji": "🐟", "gradient": "linear-gradient(135deg,#0077b6,#48cae4)"},
-    {"title": "星海舞台", "desc": "直播间背景（占位）", "emoji": "🌟", "gradient": "linear-gradient(135deg,#023e8a,#00b4d8)"},
-    {"title": "泡泡日常", "desc": "日常表情包（占位）", "emoji": "🫧", "gradient": "linear-gradient(135deg,#00b4d8,#90e0ef)"},
-    {"title": "贝壳收藏", "desc": "周边设计稿（占位）", "emoji": "🐚", "gradient": "linear-gradient(135deg,#48cae4,#caf0f8)"},
-    {"title": "夜色珊瑚", "desc": "演唱会海报（占位）", "emoji": "🪸", "gradient": "linear-gradient(135deg,#023e8a,#48cae4)"},
-    {"title": "小鱼日志封面", "desc": "日志配图（占位）", "emoji": "📖", "gradient": "linear-gradient(135deg,#0096c7,#90e0ef)"},
+    {"title": "深海初见", "desc": "闪闪的第一张立绘", "emoji": "🐟", "gradient": "linear-gradient(135deg,#0077b6,#48cae4)"},
+    {"title": "星海舞台", "desc": "直播间背景", "emoji": "🌟", "gradient": "linear-gradient(135deg,#023e8a,#00b4d8)"},
+    {"title": "泡泡日常", "desc": "日常表情包", "emoji": "🫧", "gradient": "linear-gradient(135deg,#00b4d8,#90e0ef)"},
+    {"title": "贝壳收藏", "desc": "周边设计稿", "emoji": "🐚", "gradient": "linear-gradient(135deg,#48cae4,#caf0f8)"},
+    {"title": "夜色珊瑚", "desc": "演唱会海报", "emoji": "🪸", "gradient": "linear-gradient(135deg,#023e8a,#48cae4)"},
+    {"title": "小鱼日志封面", "desc": "日志配图", "emoji": "📖", "gradient": "linear-gradient(135deg,#0096c7,#90e0ef)"},
 ]
+
+UPLOAD_DIR = os.path.join(BASE_DIR, "static", "uploads", "gallery")
+ALLOWED_IMAGE_EXT = {".png", ".jpg", ".jpeg", ".gif", ".webp"}

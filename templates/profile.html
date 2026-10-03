@@ -14,7 +14,7 @@
             {% if profile.avatar %}
                 <img src="{{ profile.avatar }}" alt="{{ profile.name }}">
             {% else %}
-                <span>✨</span>
+                <img src="{{ url_for('static', filename='images/head.png') }}" alt="{{ profile.name }} 头像">
             {% endif %}
         </div>
         <h2>{{ profile.name }}</h2>
@@ -64,6 +64,10 @@
             {% for line in profile.intro.split('\n') if line.strip() %}
                 <p>{{ line }}</p>
             {% endfor %}
+        </div>
+
+        <div class="body-showcase">
+            <img src="{{ url_for('static', filename='images/pika.png') }}" alt="{{ profile.name }} 全身像">
         </div>
     </div>
 </div>

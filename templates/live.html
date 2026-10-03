@@ -16,7 +16,9 @@
         </div>
         <div class="live-info">
             <div class="live-anchor">
-                <div class="live-anchor-face" id="live-face">✨</div>
+                <div class="live-anchor-face" id="live-face">
+                    <img src="{{ url_for('static', filename='images/head.png') }}" alt="{{ profile.name }}">
+                </div>
                 <div>
                     <p class="live-anchor-name" id="live-anchor-name">{{ profile.name }}</p>
                     <p class="live-anchor-room">房间号 {{ site.live.rsplit('/', 1)[-1] }}</p>

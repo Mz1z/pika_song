@@ -37,7 +37,6 @@ function renderLive(data) {
     const area = document.getElementById('live-area');
     const online = document.getElementById('live-online');
     const cover = document.getElementById('live-cover');
-    const face = document.getElementById('live-face');
     const anchorName = document.getElementById('live-anchor-name');
 
     const statusMap = { 0: '未开播', 1: '直播中', 2: '轮播中' };
@@ -53,9 +52,6 @@ function renderLive(data) {
     if (data.cover) {
         cover.style.backgroundImage = `url(${data.cover})`;
         cover.classList.add('has-cover');
-    }
-    if (data.anchor_face) {
-        face.innerHTML = `<img src="${data.anchor_face}" alt="avatar">`;
     }
     if (data.anchor_name) {
         anchorName.textContent = data.anchor_name;

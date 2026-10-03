@@ -384,13 +384,59 @@ body.worldsea {
 
 .hero-sea {
     position: relative;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
     padding: 36px 20px 30px;
 }
 
 .hero-content {
     position: relative;
     z-index: 1;
+    text-align: center;
+    max-width: 560px;
+}
+
+.hero-body {
+    flex: 0 0 auto;
+    z-index: 1;
+}
+
+.hero-body img {
+    max-height: 430px;
+    width: auto;
+    filter: drop-shadow(0 22px 30px rgba(2, 62, 138, 0.28));
+    animation: floatY 6s ease-in-out infinite;
+}
+
+.body-showcase {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+    box-shadow: var(--shadow);
+}
+
+.body-showcase img {
+    max-height: 480px;
+    width: auto;
+    max-width: 100%;
+    filter: drop-shadow(0 18px 26px rgba(2, 62, 138, 0.22));
+}
+
+.body-showcase p {
+    margin: 14px 0 0;
+    font-size: 0.84rem;
+    color: var(--text-light);
+}
+
+.body-showcase code {
+    background: rgba(0, 180, 216, 0.12);
+    color: var(--ocean);
+    padding: 1px 6px;
+    border-radius: 6px;
 }
 
 .hero-avatar {
@@ -550,7 +596,7 @@ body.worldsea {
 /* 首页日志预览 */
 .diary-preview-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 18px;
 }
 
@@ -600,6 +646,8 @@ body.worldsea {
 }
 
 .gallery-preview {
+    position: relative;
+    overflow: hidden;
     border-radius: var(--radius);
     height: 150px;
     display: flex;
@@ -609,6 +657,31 @@ body.worldsea {
     color: var(--white);
     box-shadow: var(--shadow);
     transition: transform 0.3s ease;
+}
+
+.gallery-preview img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery-preview:has(img)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 45%, rgba(2, 62, 138, 0.75));
+}
+
+.gallery-preview span,
+.gallery-preview p {
+    position: relative;
+    z-index: 1;
+}
+
+.gallery-preview p {
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
 }
 
 .gallery-preview:hover {
@@ -1242,6 +1315,12 @@ body.worldsea {
     filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.15));
 }
 
+.gallery-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .gallery-caption {
     padding: 16px 18px;
 }
@@ -1648,7 +1727,7 @@ body.worldsea {
 
 .admin-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     gap: 18px;
 }
 
@@ -1833,6 +1912,87 @@ body.worldsea {
     margin-top: 24px;
 }
 
+.admin-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+.admin-gallery-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.admin-gallery-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+}
+
+.admin-gallery-thumb {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.admin-gallery-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.admin-gallery-thumb span {
+    font-size: 2.4rem;
+}
+
+.admin-gallery-body {
+    padding: 14px 16px 18px;
+}
+
+.admin-gallery-body h3 {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--ocean-deep);
+    margin-bottom: 4px;
+}
+
+.admin-gallery-body p {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    margin: 0 0 6px;
+    min-height: 1.2em;
+}
+
+.admin-gallery-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.admin-current-image {
+    margin-top: 16px;
+}
+
+.admin-current-image img {
+    display: block;
+    margin-top: 6px;
+    max-width: 260px;
+    max-height: 200px;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+}
+
+.board-input[type="file"] {
+    padding: 9px 12px;
+    background: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+}
+
 /* =========================================================
    页脚
    ========================================================= */
@@ -1890,6 +2050,17 @@ body.worldsea {
     margin: 0;
 }
 
+.footer-copy a {
+    color: var(--ocean);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer-copy a:hover {
+    color: var(--ocean-deep);
+    text-decoration: underline;
+}
+
 /* =========================================================
    滚动出现动画
    ========================================================= */
@@ -1914,6 +2085,15 @@ body.worldsea {
     .live-layout,
     .board-layout {
         grid-template-columns: 1fr;
+    }
+
+    .hero-sea {
+        flex-direction: column;
+        gap: 22px;
+    }
+
+    .hero-body img {
+        max-height: 320px;
     }
 
     .profile-card {
@@ -1954,6 +2134,14 @@ body.worldsea {
     .sea-main {
         padding-left: 14px;
         padding-right: 14px;
+    }
+
+    .hero-body img {
+        max-height: 240px;
+    }
+
+    .body-showcase img {
+        max-height: 340px;
     }
 
     .hero-title {
