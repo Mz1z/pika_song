@@ -1,6 +1,10 @@
 import os
 
+from dotenv import load_dotenv
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+load_dotenv(os.path.join(BASE_DIR, ".env"), override=True)
 
 SITE_NAME = "闪闪-pika 的世界海"
 SITE_SUBTITLE = "深海之下，是闪闪的星海"

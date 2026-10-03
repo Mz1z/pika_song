@@ -28,10 +28,21 @@ python app.py
 ## 后台管理
 
 - 地址：`/admin`
-- 默认密码：`pika2026`（可用环境变量 `WORLDSEA_ADMIN_PASSWORD` 覆盖）
+- 默认密码：`pika2026`（在 `.env` 中通过 `WORLDSEA_ADMIN_PASSWORD` 修改）
 - 功能：小鱼日志增删改、留言审核/删除、基本资料与直播公告编辑
 
-生产环境请务必修改密码并设置 `WORLDSEA_SECRET_KEY`。
+## 环境变量
+
+首次部署时将 `.env.example` 复制为 `.env` 并修改（`.env` 已加入 `.gitignore`）：
+
+```bash
+cp .env.example .env
+```
+
+- `WORLDSEA_ADMIN_PASSWORD`：后台管理密码
+- `WORLDSEA_SECRET_KEY`：Flask session 密钥
+
+`.env` 会在启动时加载并**优先**于系统环境变量生效。生产环境请务必修改密码并设置随机密钥。
 
 ## 数据存储
 
