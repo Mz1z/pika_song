@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ '编辑日志' if entry else '新建日志' }} · {{ site.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <span class="page-eyebrow">ADMIN</span>
+    <h1>{{ '编辑日志' if entry else '新建日志' }}</h1>
+    <p>{{ '修改这篇深海故事' if entry else '记录今天想说的话' }}</p>
+</section>
+
+{% set admin_active = 'diary' %}
+{% include "admin/_nav.html" %}
+
+<form class="admin-form" method="post">
+    <label class="board-label">标题</label>
+    <input class="board-input" type="text" name="title" maxlength="120" required
+           value="{{ entry.title if entry else '' }}">
+
+    <label class="board-label">心情标签</label>
+    <input class="board-input" type="text" name="mood" maxlength="32"
+           placeholder="例如：开心 / 平静 / 想唱歌"
+           value="{{ entry.mood if entry else '' }}">
+
+    <label class="board-label">内容</label>
+    <textarea class="board-input" name="content" rows="12" required>{{ entry.content if entry else '' }}</textarea>
+
+    <label class="admin-check">
+        <input type="checkbox" name="published" {% if not entry or entry.published %}checked{% endif %}>
+        <span>发布到小鱼日志</span>
+    </label>
+
+    <div class="admin-form-actions">
+        <button class="sea-btn sea-btn-primary" type="submit">
+            <i class="bi bi-save"></i> 保存
+        </button>
+        <a class="sea-btn sea-btn-ghost" href="{{ url_for('admin.diary_list') }}">取消</a>
+    </div>
+</form>
+{% endblock %}

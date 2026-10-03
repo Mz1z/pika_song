@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ entry.title }} · 小鱼日志{% endblock %}
+
+{% block content %}
+<article class="diary-detail">
+    <a class="back-link" href="{{ url_for('main.diary') }}"><i class="bi bi-arrow-left"></i> 返回日志列表</a>
+    <div class="diary-card-head">
+        <span class="diary-date"><i class="bi bi-calendar3"></i> {{ entry.created_at[:10] }}</span>
+        {% if entry.mood %}<span class="sea-tag sea-tag-sm">{{ entry.mood }}</span>{% endif %}
+    </div>
+    <h1>{{ entry.title }}</h1>
+    <div class="diary-content">
+        {% for line in entry.content.split('\n') %}
+            <p>{{ line }}</p>
+        {% endfor %}
+    </div>
+</article>
+{% endblock %}

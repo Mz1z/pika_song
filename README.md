@@ -1,6 +1,6 @@
-# 闪闪-pika 的歌单
+# 闪闪-pika 的世界海
 
-展示闪闪-pika 在网易云音乐的拿手歌单和在学歌单。
+闪闪-pika 的个人站「世界海」，海洋企划风格。包含基本资料、直播间实时状态、歌单、相册、小鱼日志、留言板，以及供闪闪使用的后台管理。
 
 ## 启动
 
@@ -11,14 +11,41 @@ python app.py
 
 浏览器访问 `http://localhost:5000`
 
-## 功能
+## 页面模块
 
-- 切换查看**拿手歌单** / **在学歌单**（翻页动画）
-- 强制刷新（绕过 10 分钟本地缓存）
-- 跳转 Bilibili 主页和直播间
+| 路径 | 说明 |
+| --- | --- |
+| `/` | 世界海首页 |
+| `/profile` | 基本资料 |
+| `/live` | 直播间（实时开播状态） |
+| `/playlist` | 歌单（拿手 / 在学，翻页切换） |
+| `/gallery` | 相册 |
+| `/diary` | 小鱼日志 |
+| `/board` | 留言板（留言需审核后显示） |
+| `/links` | 联系 / 链接聚合 |
+| `/admin` | 后台管理（需密码登录） |
+
+## 后台管理
+
+- 地址：`/admin`
+- 默认密码：`pika2026`（可用环境变量 `WORLDSEA_ADMIN_PASSWORD` 覆盖）
+- 功能：小鱼日志增删改、留言审核/删除、基本资料与直播公告编辑
+
+生产环境请务必修改密码并设置 `WORLDSEA_SECRET_KEY`。
+
+## 数据存储
+
+- SQLite：`data/worldsea.db`（首次启动自动创建，已加入 `.gitignore`）
+- 歌单缓存：`cache/*.json`
+- 直播状态缓存：`cache/live_status.json`（60 秒）
 
 ## 技术栈
 
 - Python Flask + requests
-- 网易云音乐公开 API
-- Bootstrap 5 + 原生 JS
+- SQLite（Python 自带 sqlite3）
+- 网易云音乐公开 API、Bilibili 直播公开 API
+- Bootstrap 5 + 原生 JS + Jinja2 多页面模板
+
+## 配置
+
+站点资料、直播排期、管理员密码、相册与友链等集中在 `config.py`；也可登录后台在线修改基本资料与直播公告。

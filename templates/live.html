@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}直播间 · {{ site.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <span class="page-eyebrow">LIVE ROOM</span>
+    <h1>直播间</h1>
+    <p>{{ profile.room_name }}</p>
+</section>
+
+<div class="live-layout">
+    <div class="live-status-card" id="live-card" data-status="loading">
+        <div class="live-cover" id="live-cover">
+            <div class="live-cover-placeholder">🌊</div>
+            <span class="live-badge" id="live-badge">加载中</span>
+        </div>
+        <div class="live-info">
+            <div class="live-anchor">
+                <div class="live-anchor-face" id="live-face">✨</div>
+                <div>
+                    <p class="live-anchor-name" id="live-anchor-name">{{ profile.name }}</p>
+                    <p class="live-anchor-room">房间号 {{ site.live.rsplit('/', 1)[-1] }}</p>
+                </div>
+            </div>
+            <h2 class="live-title" id="live-title">正在读取直播状态…</h2>
+            <div class="live-meta">
+                <span id="live-area"><i class="bi bi-geo-alt"></i> --</span>
+                <span id="live-online"><i class="bi bi-people"></i> --</span>
+            </div>
+            <div class="live-actions">
+                <a href="{{ site.live }}" target="_blank" rel="noopener" class="sea-btn sea-btn-primary">
+                    <i class="bi bi-box-arrow-up-right"></i> 前往直播间
+                </a>
+                <button class="sea-btn sea-btn-ghost" id="live-refresh">
+                    <i class="bi bi-arrow-clockwise"></i> 刷新状态
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <aside class="live-side">
+        <div class="live-panel">
+            <h3><i class="bi bi-megaphone"></i> 直播公告</h3>
+            <p>{{ profile.room_notice }}</p>
+        </div>
+        <div class="live-panel">
+            <h3><i class="bi bi-calendar-week"></i> 常规排期</h3>
+            <p>{{ profile.room_schedule }}</p>
+        </div>
+        <div class="live-panel">
+            <h3><i class="bi bi-info-circle"></i> 小提示</h3>
+            <p>开播状态每 60 秒自动刷新一次，点击「刷新状态」可立即获取最新信息。</p>
+        </div>
+    </aside>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/live.js') }}"></script>
+{% endblock %}

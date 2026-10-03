@@ -1,113 +1,100 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>闪闪-pika 的歌单</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <!-- 顶部波浪 -->
-    <div class="wave-top">
-        <svg viewBox="0 0 1440 200" preserveAspectRatio="none">
-            <path class="wave-path" d="M0,64 C240,160 480,0 720,64 C960,128 1200,32 1440,96 L1440,0 L0,0 Z"></path>
-            <path class="wave-path wave-path-2" d="M0,96 C320,32 560,128 720,96 C880,64 1200,160 1440,64 L1440,0 L0,0 Z"></path>
-        </svg>
-    </div>
+{% extends "base.html" %}
+{% block title %}{{ site.name }} · 首页{% endblock %}
 
-    <!-- 主内容 -->
-    <div class="container main-container">
-        <!-- 头部 -->
-        <header class="hero text-center">
-            <div class="avatar-container">
-                <div class="avatar">
-                    <span class="avatar-text">✨</span>
-                </div>
-            </div>
-            <h1 class="hero-title">闪闪-pika</h1>
-            <p class="hero-subtitle">✨ 歌单精选 ✨</p>
-            <div class="hero-decorations">
-                <span class="bubble b1"></span>
-                <span class="bubble b2"></span>
-                <span class="bubble b3"></span>
-                <span class="shell">🐚</span>
-                <span class="starfish">⭐</span>
-            </div>
-        </header>
-
-        <!-- Bilibili 链接 -->
-        <div class="bilibili-links">
-            <a href="https://space.bilibili.com/3546928222571136" target="_blank" rel="noopener" class="bili-link bili-space">
-                <i class="bi bi-house-heart-fill"></i>
-                <span>闪闪-pika 的主页</span>
+{% block content %}
+<section class="hero-sea">
+    <div class="hero-content">
+        <div class="hero-avatar">
+            {% if profile.avatar %}
+                <img src="{{ profile.avatar }}" alt="{{ profile.name }}">
+            {% else %}
+                <span class="hero-avatar-emoji">✨</span>
+            {% endif %}
+            <span class="hero-ring"></span>
+        </div>
+        <h1 class="hero-title">{{ profile.name }}</h1>
+        <p class="hero-en">{{ profile.en_name }}</p>
+        <p class="hero-slogan">「{{ profile.slogan }}」</p>
+        <div class="hero-tags">
+            {% for tag in profile.tags.split(',') if tag.strip() %}
+                <span class="sea-tag">#{{ tag.strip() }}</span>
+            {% endfor %}
+        </div>
+        <div class="hero-actions">
+            <a href="{{ url_for('main.live') }}" class="sea-btn sea-btn-primary">
+                <i class="bi bi-broadcast"></i> 进入直播间
             </a>
-            <a href="https://live.bilibili.com/1861308619" target="_blank" rel="noopener" class="bili-link bili-live">
-                <i class="bi bi-broadcast"></i>
-                <span>闪闪-pika 的直播间</span>
+            <a href="{{ url_for('main.playlist') }}" class="sea-btn sea-btn-ghost">
+                <i class="bi bi-music-note-list"></i> 查看歌单
             </a>
         </div>
+    </div>
+</section>
 
-        <!-- 切换按钮 -->
-        <div class="toggle-bar">
-            <button class="toggle-btn active" data-type="skilled">
-                <span class="toggle-icon">🎤</span>
-                <span>拿手歌单</span>
-            </button>
-            <button class="toggle-btn" data-type="learning">
-                <span class="toggle-icon">📖</span>
-                <span>在学歌单</span>
-            </button>
-            <button class="refresh-btn" id="refresh-btn" title="强制刷新歌单（清除缓存）">
-                <i class="bi bi-arrow-clockwise"></i>
-            </button>
-        </div>
+<section class="module-grid">
+    <a href="{{ url_for('main.profile') }}" class="module-card" style="--accent:#0077b6">
+        <span class="module-icon">🪪</span>
+        <h3>基本资料</h3>
+        <p>认识住在深海里的闪闪</p>
+    </a>
+    <a href="{{ url_for('main.live') }}" class="module-card" style="--accent:#00b4d8">
+        <span class="module-icon">📡</span>
+        <h3>直播间</h3>
+        <p>实时开播状态与公告</p>
+    </a>
+    <a href="{{ url_for('main.playlist') }}" class="module-card" style="--accent:#48cae4">
+        <span class="module-icon">🎵</span>
+        <h3>歌单</h3>
+        <p>拿手曲目与在学新歌</p>
+    </a>
+    <a href="{{ url_for('main.diary') }}" class="module-card" style="--accent:#0096c7">
+        <span class="module-icon">📖</span>
+        <h3>小鱼日志</h3>
+        <p>深海日常与碎碎念</p>
+    </a>
+    <a href="{{ url_for('main.gallery') }}" class="module-card" style="--accent:#023e8a">
+        <span class="module-icon">🖼️</span>
+        <h3>相册</h3>
+        <p>立绘、表情包与海报</p>
+    </a>
+    <a href="{{ url_for('main.board') }}" class="module-card" style="--accent:#90e0ef">
+        <span class="module-icon">🫧</span>
+        <h3>留言板</h3>
+        <p>给闪闪留下一句话</p>
+    </a>
+</section>
 
-        <!-- 歌单卡片 - 翻页容器 -->
-        <div class="flip-container" id="flip-container">
-            <div class="playlist-card" id="playlist-card">
-                <div class="card-inner">
-                    <div class="card-header-custom" id="card-header">
-                        <div class="card-icon" id="card-icon">📖</div>
-                        <div>
-                            <h2 class="card-title" id="card-title">在学歌单</h2>
-                            <p class="card-desc" id="card-desc">正在练习中的歌曲</p>
-                        </div>
-                        <div class="card-source" id="card-source"></div>
-                    </div>
-                    <div class="card-body-custom">
-                        <div class="loading-spinner" id="playlist-loading">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">加载中...</span>
-                            </div>
-                            <p class="loading-text">正在拉取歌单...</p>
-                        </div>
-                        <div class="track-count" id="track-count"></div>
-                        <div class="track-list" id="track-list"></div>
-                        <div class="error-msg" id="error-msg" style="display:none;">
-                            <i class="bi bi-exclamation-triangle"></i> 加载失败，请刷新重试
-                        </div>
-                    </div>
-                </div>
+{% if diary_entries %}
+<section class="sea-section">
+    <div class="section-head">
+        <h2><i class="bi bi-journal-richtext"></i> 最新小鱼日志</h2>
+        <a href="{{ url_for('main.diary') }}" class="section-more">全部日志 <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="diary-preview-grid">
+        {% for entry in diary_entries %}
+            <a href="{{ url_for('main.diary_detail', entry_id=entry.id) }}" class="diary-preview-card">
+                <span class="diary-preview-date">{{ entry.created_at[:10] }}</span>
+                <h3>{{ entry.title }}</h3>
+                <p>{{ entry.content[:80] }}{% if entry.content|length > 80 %}…{% endif %}</p>
+                {% if entry.mood %}<span class="sea-tag sea-tag-sm">{{ entry.mood }}</span>{% endif %}
+            </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<section class="sea-section">
+    <div class="section-head">
+        <h2><i class="bi bi-images"></i> 相册掠影</h2>
+        <a href="{{ url_for('main.gallery') }}" class="section-more">进入相册 <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="gallery-preview-grid">
+        {% for item in gallery_items %}
+            <div class="gallery-preview" style="background:{{ item.gradient }}">
+                <span>{{ item.emoji }}</span>
+                <p>{{ item.title }}</p>
             </div>
-        </div>
-
-        <!-- 页脚 -->
-        <footer class="text-center mt-4">
-            <p class="footer-text">Powered by <i class="bi bi-spotify"></i> 网易云音乐 | 闪闪-pika © 2026</p>
-        </footer>
+        {% endfor %}
     </div>
-
-    <!-- 底部波浪 -->
-    <div class="wave-bottom">
-        <svg viewBox="0 0 1440 200" preserveAspectRatio="none">
-            <path class="wave-path" d="M0,136 C240,40 480,200 720,136 C960,72 1200,168 1440,104 L1440,200 L0,200 Z"></path>
-            <path class="wave-path wave-path-2" d="M0,104 C320,168 560,72 720,104 C880,136 1200,40 1440,136 L1440,200 L0,200 Z"></path>
-        </svg>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-</body>
-</html>
+</section>
+{% endblock %}

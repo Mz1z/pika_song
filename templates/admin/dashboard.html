@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}后台总览 · {{ site.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <span class="page-eyebrow">ADMIN</span>
+    <h1>后台总览</h1>
+    <p>欢迎回来，闪闪</p>
+</section>
+
+{% set admin_active = 'dashboard' %}
+{% include "admin/_nav.html" %}
+
+<div class="admin-stats">
+    <div class="admin-stat-card">
+        <span class="admin-stat-icon">📖</span>
+        <span class="admin-stat-num">{{ stats.diary_count }}</span>
+        <span class="admin-stat-label">篇小鱼日志</span>
+    </div>
+    <div class="admin-stat-card">
+        <span class="admin-stat-icon">💬</span>
+        <span class="admin-stat-num">{{ stats.message_total }}</span>
+        <span class="admin-stat-label">条留言</span>
+    </div>
+    <div class="admin-stat-card admin-stat-alert">
+        <span class="admin-stat-icon">⏳</span>
+        <span class="admin-stat-num">{{ stats.message_pending }}</span>
+        <span class="admin-stat-label">条待审核</span>
+    </div>
+</div>
+
+<div class="sea-section">
+    <div class="section-head">
+        <h2><i class="bi bi-clock-history"></i> 最近日志</h2>
+        <a href="{{ url_for('admin.diary_list') }}" class="section-more">管理日志 <i class="bi bi-arrow-right"></i></a>
+    </div>
+    {% if entries %}
+        <div class="admin-table">
+            {% for entry in entries %}
+                <div class="admin-row">
+                    <span class="admin-row-title">{{ entry.title }}</span>
+                    <span class="admin-row-meta">{{ entry.created_at[:16] }}</span>
+                    <span class="admin-row-badge {% if entry.published %}is-on{% else %}is-off{% endif %}">
+                        {{ '已发布' if entry.published else '草稿' }}
+                    </span>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-sea"><span>🫧</span><p>还没有日志，去写一篇吧。</p></div>
+    {% endif %}
+</div>
+{% endblock %}

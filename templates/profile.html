@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}基本资料 · {{ site.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <span class="page-eyebrow">PROFILE</span>
+    <h1>基本资料</h1>
+    <p>深海住民闪闪-pika 的小档案</p>
+</section>
+
+<div class="profile-layout">
+    <aside class="profile-card">
+        <div class="profile-avatar">
+            {% if profile.avatar %}
+                <img src="{{ profile.avatar }}" alt="{{ profile.name }}">
+            {% else %}
+                <span>✨</span>
+            {% endif %}
+        </div>
+        <h2>{{ profile.name }}</h2>
+        <p class="profile-en">{{ profile.en_name }}</p>
+        <p class="profile-slogan">{{ profile.slogan }}</p>
+        <div class="profile-tags">
+            {% for tag in profile.tags.split(',') if tag.strip() %}
+                <span class="sea-tag">#{{ tag.strip() }}</span>
+            {% endfor %}
+        </div>
+    </aside>
+
+    <div class="profile-main">
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label"><i class="bi bi-calendar-heart"></i> 生日</span>
+                <span class="info-value">{{ profile.birthday }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label"><i class="bi bi-rulers"></i> 身高</span>
+                <span class="info-value">{{ profile.height }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label"><i class="bi bi-stars"></i> 出道日</span>
+                <span class="info-value">{{ profile.debut_date }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label"><i class="bi bi-suit-heart"></i> 星座</span>
+                <span class="info-value">{{ profile.constellation }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label"><i class="bi bi-droplet"></i> 血型</span>
+                <span class="info-value">{{ profile.blood_type }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label"><i class="bi bi-controller"></i> 爱好</span>
+                <span class="info-value">{{ profile.hobby }}</span>
+            </div>
+            <div class="info-item info-item-wide">
+                <span class="info-label"><i class="bi bi-mic"></i> 特长</span>
+                <span class="info-value">{{ profile.skills }}</span>
+            </div>
+        </div>
+
+        <div class="about-card">
+            <h2><i class="bi bi-chat-quote"></i> 关于闪闪</h2>
+            {% for line in profile.intro.split('\n') if line.strip() %}
+                <p>{{ line }}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

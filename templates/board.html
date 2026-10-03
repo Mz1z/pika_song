@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}留言板 · {{ site.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <span class="page-eyebrow">MESSAGE BOARD</span>
+    <h1>留言板</h1>
+    <p>把想说的话装进漂流瓶，投进这片海</p>
+</section>
+
+<div class="board-layout">
+    <form class="board-form" method="post" action="{{ url_for('main.board') }}">
+        <h2><i class="bi bi-pencil-square"></i> 写一条留言</h2>
+        <label class="board-label">你的昵称</label>
+        <input class="board-input" type="text" name="nickname" maxlength="24" placeholder="无名小鱼">
+        <label class="board-label">留言内容</label>
+        <textarea class="board-input" name="content" rows="4" maxlength="500" required placeholder="想对闪闪说的话…"></textarea>
+        <button class="sea-btn sea-btn-primary" type="submit">
+            <i class="bi bi-send"></i> 投进大海
+        </button>
+        <p class="board-hint">留言需要审核后才会显示在下方哦~</p>
+    </form>
+
+    <div class="board-list">
+        <h2><i class="bi bi-chat-heart"></i> 来自海面的声音（{{ messages|length }}）</h2>
+        {% if messages %}
+            {% for msg in messages %}
+                <div class="message-card">
+                    <div class="message-avatar">{{ msg.nickname[:1] }}</div>
+                    <div class="message-body">
+                        <div class="message-meta">
+                            <span class="message-name">{{ msg.nickname }}</span>
+                            <span class="message-time">{{ msg.created_at[:16] }}</span>
+                        </div>
+                        <p>{{ msg.content }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-sea">
+                <span>🫧</span>
+                <p>还没有留言，成为第一条游过来的小鱼吧。</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

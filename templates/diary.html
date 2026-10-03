@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}小鱼日志 · {{ site.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <span class="page-eyebrow">DIARY</span>
+    <h1>小鱼日志</h1>
+    <p>深海里的日常、碎碎念与想对你说的话</p>
+</section>
+
+{% if entries %}
+    <div class="diary-list">
+        {% for entry in entries %}
+            <article class="diary-card">
+                <div class="diary-card-head">
+                    <span class="diary-date"><i class="bi bi-calendar3"></i> {{ entry.created_at[:10] }}</span>
+                    {% if entry.mood %}<span class="sea-tag sea-tag-sm">{{ entry.mood }}</span>{% endif %}
+                </div>
+                <h2><a href="{{ url_for('main.diary_detail', entry_id=entry.id) }}">{{ entry.title }}</a></h2>
+                <p>{{ entry.content[:160] }}{% if entry.content|length > 160 %}…{% endif %}</p>
+                <a class="diary-more" href="{{ url_for('main.diary_detail', entry_id=entry.id) }}">
+                    阅读全文 <i class="bi bi-arrow-right"></i>
+                </a>
+            </article>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-sea">
+        <span>🫧</span>
+        <p>海面还很平静，闪闪还没有写下第一篇日志。</p>
+    </div>
+{% endif %}
+{% endblock %}

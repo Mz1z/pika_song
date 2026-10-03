@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}相册 · {{ site.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <span class="page-eyebrow">GALLERY</span>
+    <h1>相册</h1>
+    <p>立绘、表情包与深海海报（当前为占位素材）</p>
+</section>
+
+<div class="gallery-grid">
+    {% for item in items %}
+        <div class="gallery-item" style="--grad:{{ item.gradient }}">
+            <div class="gallery-thumb">
+                <span>{{ item.emoji }}</span>
+            </div>
+            <div class="gallery-caption">
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.desc }}</p>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

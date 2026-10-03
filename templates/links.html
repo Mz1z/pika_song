@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}联系 · {{ site.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <span class="page-eyebrow">LINKS</span>
+    <h1>联系闪闪</h1>
+    <p>想找到闪闪，可以通过下面的入口游进这片海</p>
+</section>
+
+<div class="links-grid">
+    {% for link in links %}
+        <a href="{{ link.url }}" {% if link.url != '#' %}target="_blank" rel="noopener"{% endif %}
+           class="link-card link-{{ link.style }}">
+            <span class="link-icon"><i class="bi {{ link.icon }}"></i></span>
+            <span class="link-label">{{ link.label }}</span>
+            <i class="bi bi-arrow-up-right link-arrow"></i>
+        </a>
+    {% endfor %}
+</div>
+
+<div class="about-card links-note">
+    <h2><i class="bi bi-water"></i> 友情提示</h2>
+    <p>私信与留言请保持友善，闪闪会认真看每一条来自海面上的消息。</p>
+    <p>商务合作可以通过 B 站私信联系。</p>
+</div>
+{% endblock %}

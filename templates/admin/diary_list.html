@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}日志管理 · {{ site.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <span class="page-eyebrow">ADMIN</span>
+    <h1>小鱼日志</h1>
+    <p>写下或修改深海里的故事</p>
+</section>
+
+{% set admin_active = 'diary' %}
+{% include "admin/_nav.html" %}
+
+<div class="admin-toolbar">
+    <a href="{{ url_for('admin.diary_new') }}" class="sea-btn sea-btn-primary">
+        <i class="bi bi-plus-lg"></i> 新建日志
+    </a>
+</div>
+
+{% if entries %}
+    <div class="admin-table">
+        {% for entry in entries %}
+            <div class="admin-row">
+                <span class="admin-row-title">{{ entry.title }}</span>
+                <span class="admin-row-meta">{{ entry.created_at[:16] }}</span>
+                <span class="admin-row-badge {% if entry.published %}is-on{% else %}is-off{% endif %}">
+                    {{ '已发布' if entry.published else '草稿' }}
+                </span>
+                <span class="admin-row-actions">
+                    <a class="admin-action" href="{{ url_for('admin.diary_edit', entry_id=entry.id) }}">编辑</a>
+                    <form method="post" action="{{ url_for('admin.diary_delete', entry_id=entry.id) }}"
+                          onsubmit="return confirm('确定删除这条日志吗？');">
+                        <button class="admin-action admin-action-danger" type="submit">删除</button>
+                    </form>
+                </span>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-sea"><span>🫧</span><p>还没有日志，点击「新建日志」开始写吧。</p></div>
+{% endif %}
+{% endblock %}

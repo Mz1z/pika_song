@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}后台登录 · {{ site.name }}{% endblock %}
+
+{% block content %}
+<div class="admin-login">
+    <div class="admin-login-card">
+        <span class="admin-login-icon">🔐</span>
+        <h1>世界海后台</h1>
+        <p>只有闪闪可以进入这片深海的控制室</p>
+        <form method="post">
+            <input class="board-input" type="password" name="password" placeholder="请输入管理密码" required autofocus>
+            <button class="sea-btn sea-btn-primary" type="submit">
+                <i class="bi bi-box-arrow-in-right"></i> 进入后台
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

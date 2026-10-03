@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}歌单 · {{ site.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <span class="page-eyebrow">PLAYLIST</span>
+    <h1>闪闪的歌单</h1>
+    <p>拿手曲目与正在练习的新歌</p>
+</section>
+
+<div class="toggle-bar">
+    <button class="toggle-btn active" data-type="skilled">
+        <span class="toggle-icon">🎤</span>
+        <span>拿手歌单</span>
+    </button>
+    <button class="toggle-btn" data-type="learning">
+        <span class="toggle-icon">📖</span>
+        <span>在学歌单</span>
+    </button>
+    <button class="refresh-btn" id="refresh-btn" title="强制刷新歌单（清除缓存）">
+        <i class="bi bi-arrow-clockwise"></i>
+    </button>
+</div>
+
+<div class="flip-container" id="flip-container">
+    <div class="playlist-card">
+        <div class="card-inner">
+            <div class="card-header-custom" id="card-header">
+                <div class="card-icon" id="card-icon">📖</div>
+                <div>
+                    <h2 class="card-title" id="card-title">在学歌单</h2>
+                    <p class="card-desc" id="card-desc">正在练习中的歌曲</p>
+                </div>
+                <div class="card-source" id="card-source"></div>
+            </div>
+            <div class="card-body-custom">
+                <div class="loading-spinner" id="playlist-loading">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">加载中...</span>
+                    </div>
+                    <p class="loading-text">正在拉取歌单...</p>
+                </div>
+                <div class="track-count" id="track-count"></div>
+                <div class="track-list" id="track-list"></div>
+                <div class="error-msg" id="error-msg" style="display:none;">
+                    <i class="bi bi-exclamation-triangle"></i> 加载失败，请刷新重试
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/playlist.js') }}"></script>
+{% endblock %}

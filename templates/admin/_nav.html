@@ -1,0 +1,20 @@
+<nav class="admin-nav">
+    <a href="{{ url_for('admin.dashboard') }}" class="{% if admin_active == 'dashboard' %}active{% endif %}">
+        <i class="bi bi-speedometer2"></i> 总览
+    </a>
+    <a href="{{ url_for('admin.diary_list') }}" class="{% if admin_active == 'diary' %}active{% endif %}">
+        <i class="bi bi-journal-text"></i> 小鱼日志
+    </a>
+    <a href="{{ url_for('admin.messages') }}" class="{% if admin_active == 'messages' %}active{% endif %}">
+        <i class="bi bi-chat-dots"></i> 留言审核
+    </a>
+    <a href="{{ url_for('admin.profile') }}" class="{% if admin_active == 'profile' %}active{% endif %}">
+        <i class="bi bi-person-gear"></i> 基本资料
+    </a>
+    <a href="{{ url_for('main.index') }}">
+        <i class="bi bi-house"></i> 返回站点
+    </a>
+    <a href="{{ url_for('admin.logout') }}" class="admin-nav-danger">
+        <i class="bi bi-box-arrow-right"></i> 退出
+    </a>
+</nav>

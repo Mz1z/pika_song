@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}基本资料管理 · {{ site.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <span class="page-eyebrow">ADMIN</span>
+    <h1>基本资料</h1>
+    <p>编辑世界海上展示的资料与直播间公告</p>
+</section>
+
+{% set admin_active = 'profile' %}
+{% include "admin/_nav.html" %}
+
+<form class="admin-form" method="post">
+    <div class="admin-form-grid">
+        <div>
+            <label class="board-label">名字</label>
+            <input class="board-input" type="text" name="name" value="{{ profile.name }}">
+        </div>
+        <div>
+            <label class="board-label">英文名</label>
+            <input class="board-input" type="text" name="en_name" value="{{ profile.en_name }}">
+        </div>
+        <div>
+            <label class="board-label">生日</label>
+            <input class="board-input" type="text" name="birthday" value="{{ profile.birthday }}">
+        </div>
+        <div>
+            <label class="board-label">身高</label>
+            <input class="board-input" type="text" name="height" value="{{ profile.height }}">
+        </div>
+        <div>
+            <label class="board-label">出道日</label>
+            <input class="board-input" type="text" name="debut_date" value="{{ profile.debut_date }}">
+        </div>
+        <div>
+            <label class="board-label">星座</label>
+            <input class="board-input" type="text" name="constellation" value="{{ profile.constellation }}">
+        </div>
+        <div>
+            <label class="board-label">血型</label>
+            <input class="board-input" type="text" name="blood_type" value="{{ profile.blood_type }}">
+        </div>
+        <div>
+            <label class="board-label">爱好</label>
+            <input class="board-input" type="text" name="hobby" value="{{ profile.hobby }}">
+        </div>
+    </div>
+
+    <label class="board-label">特长</label>
+    <input class="board-input" type="text" name="skills" value="{{ profile.skills }}">
+
+    <label class="board-label">标签（英文逗号分隔）</label>
+    <input class="board-input" type="text" name="tags" value="{{ profile.tags }}">
+
+    <label class="board-label">一句话口号</label>
+    <input class="board-input" type="text" name="slogan" value="{{ profile.slogan }}">
+
+    <label class="board-label">自我介绍（换行分段）</label>
+    <textarea class="board-input" name="intro" rows="6">{{ profile.intro }}</textarea>
+
+    <label class="board-label">直播间名称</label>
+    <input class="board-input" type="text" name="room_name" value="{{ profile.room_name }}">
+
+    <label class="board-label">直播公告</label>
+    <textarea class="board-input" name="room_notice" rows="3">{{ profile.room_notice }}</textarea>
+
+    <label class="board-label">直播排期</label>
+    <input class="board-input" type="text" name="room_schedule" value="{{ profile.room_schedule }}">
+
+    <div class="admin-form-actions">
+        <button class="sea-btn sea-btn-primary" type="submit">
+            <i class="bi bi-save"></i> 保存资料
+        </button>
+        <a class="sea-btn sea-btn-ghost" href="{{ url_for('admin.dashboard') }}">返回</a>
+    </div>
+</form>
+{% endblock %}
