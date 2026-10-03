@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{{ '编辑链接' if item else '新增链接' }} · {{ site.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <span class="page-eyebrow">ADMIN</span>
+    <h1>{{ '编辑链接' if item else '新增链接' }}</h1>
+    <p>图标使用 Bootstrap Icons 类名，例如 <code>bi-house-heart-fill</code></p>
+</section>
+
+{% set admin_active = 'links' %}
+{% include "admin/_nav.html" %}
+
+<form class="admin-form" method="post">
+    <label class="board-label">名称</label>
+    <input class="board-input" type="text" name="label" maxlength="60" required
+           value="{{ item.label if item else '' }}">
+
+    <label class="board-label">链接地址</label>
+    <input class="board-input" type="text" name="url" maxlength="500"
+           placeholder="https://..." value="{{ item.url if item else '' }}">
+
+    <div class="admin-form-grid">
+        <div>
+            <label class="board-label">图标类名</label>
+            <input class="board-input" type="text" name="icon" maxlength="60"
+                   placeholder="bi-link-45deg"
+                   value="{{ item.icon if item else 'bi-link-45deg' }}">
+        </div>
+        <div>
+            <label class="board-label">配色</label>
+            <select class="board-input" name="style">
+                {% for value, name in [('pink','粉色'),('blue','蓝色'),('red','红色'),('green','绿色'),('teal','青色')] %}
+                    <option value="{{ value }}"
+                        {% if (item.style if item else 'teal') == value %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <label class="board-label">排序（数字越小越靠前）</label>
+    <input class="board-input" type="number" name="sort_order"
+           value="{{ item.sort_order if item else 0 }}">
+
+    <div class="admin-form-actions">
+        <button class="sea-btn sea-btn-primary" type="submit">
+            <i class="bi bi-save"></i> 保存
+        </button>
+        <a class="sea-btn sea-btn-ghost" href="{{ url_for('admin.links_list') }}">取消</a>
+    </div>
+</form>
+{% endblock %}

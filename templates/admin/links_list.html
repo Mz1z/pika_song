@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}联系链接管理 · {{ site.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <span class="page-eyebrow">ADMIN</span>
+    <h1>联系链接管理</h1>
+    <p>管理「联系」页面展示的链接按钮</p>
+</section>
+
+{% set admin_active = 'links' %}
+{% include "admin/_nav.html" %}
+
+<div class="admin-toolbar">
+    <a href="{{ url_for('admin.links_new') }}" class="sea-btn sea-btn-primary">
+        <i class="bi bi-plus-lg"></i> 新增链接
+    </a>
+</div>
+
+{% if items %}
+    <div class="admin-table">
+        {% for item in items %}
+            <div class="admin-row">
+                <span class="link-preview link-{{ item.style }}">
+                    <i class="bi {{ item.icon }}"></i>
+                </span>
+                <span class="admin-row-title">{{ item.label }}</span>
+                <span class="admin-row-meta">{{ item.url }}</span>
+                <span class="admin-row-badge is-off">排序 {{ item.sort_order }}</span>
+                <span class="admin-row-actions">
+                    <a class="admin-action" href="{{ url_for('admin.links_edit', link_id=item.id) }}">编辑</a>
+                    <form method="post" action="{{ url_for('admin.links_delete', link_id=item.id) }}"
+                          onsubmit="return confirm('确定删除这条链接吗？');">
+                        <button class="admin-action admin-action-danger" type="submit">删除</button>
+                    </form>
+                </span>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-sea"><span>🫧</span><p>还没有链接，点击「新增链接」添加吧。</p></div>
+{% endif %}
+{% endblock %}

@@ -223,6 +223,74 @@ def gallery_delete(item_id):
     return redirect(url_for("admin.gallery_list"))
 
 
+def _link_form_data():
+    label = (request.form.get("label") or "").strip()
+    if not label:
+        return None, "名称不能为空"
+
+    url = (request.form.get("url") or "").strip()
+    icon = (request.form.get("icon") or "").strip() or "bi-link-45deg"
+    style = (request.form.get("style") or "").strip() or "teal"
+    try:
+        sort_order = int((request.form.get("sort_order") or "0").strip())
+    except ValueError:
+        sort_order = 0
+
+    return {
+        "label": label,
+        "url": url,
+        "icon": icon,
+        "style": style,
+        "sort_order": sort_order,
+    }, None
+
+
+@admin_bp.route("/links")
+@login_required
+def links_list():
+    return render_template("admin/links_list.html", items=db.list_links())
+
+
+@admin_bp.route("/links/new", methods=["GET", "POST"])
+@login_required
+def links_new():
+    if request.method == "POST":
+        data, error = _link_form_data()
+        if error:
+            flash(error, "error")
+        else:
+            db.create_link(**data)
+            flash("链接已添加", "success")
+            return redirect(url_for("admin.links_list"))
+    return render_template("admin/links_edit.html", item=None)
+
+
+@admin_bp.route("/links/<int:link_id>/edit", methods=["GET", "POST"])
+@login_required
+def links_edit(link_id):
+    item = db.get_link(link_id)
+    if not item:
+        flash("这条链接不存在", "error")
+        return redirect(url_for("admin.links_list"))
+    if request.method == "POST":
+        data, error = _link_form_data()
+        if error:
+            flash(error, "error")
+        else:
+            db.update_link(link_id, **data)
+            flash("链接已更新", "success")
+            return redirect(url_for("admin.links_list"))
+    return render_template("admin/links_edit.html", item=item)
+
+
+@admin_bp.route("/links/<int:link_id>/delete", methods=["POST"])
+@login_required
+def links_delete(link_id):
+    db.delete_link(link_id)
+    flash("链接已删除", "success")
+    return redirect(url_for("admin.links_list"))
+
+
 @admin_bp.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():

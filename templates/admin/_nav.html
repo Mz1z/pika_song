@@ -11,6 +11,9 @@
     <a href="{{ url_for('admin.gallery_list') }}" class="{% if admin_active == 'gallery' %}active{% endif %}">
         <i class="bi bi-images"></i> 相册
     </a>
+    <a href="{{ url_for('admin.links_list') }}" class="{% if admin_active == 'links' %}active{% endif %}">
+        <i class="bi bi-link-45deg"></i> 联系链接
+    </a>
     <a href="{{ url_for('admin.profile') }}" class="{% if admin_active == 'profile' %}active{% endif %}">
         <i class="bi bi-person-gear"></i> 基本资料
     </a>

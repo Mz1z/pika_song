@@ -9,7 +9,6 @@ from flask import (
 )
 
 import database as db
-from config import LINK_DEFAULTS
 
 main_bp = Blueprint("main", __name__)
 
@@ -46,7 +45,7 @@ def gallery():
 
 @main_bp.route("/links")
 def links():
-    return render_template("links.html", active="links", links=LINK_DEFAULTS)
+    return render_template("links.html", active="links", links=db.list_links())
 
 
 @main_bp.route("/diary")

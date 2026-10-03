@@ -2,7 +2,7 @@ import os
 import sqlite3
 from datetime import datetime
 
-from config import DB_PATH, GALLERY_ITEMS, PROFILE_DEFAULTS
+from config import DB_PATH, GALLERY_ITEMS, LINK_DEFAULTS, PROFILE_DEFAULTS
 
 os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 
@@ -51,6 +51,16 @@ def init_db():
                 sort_order INTEGER DEFAULT 0,
                 created_at TEXT NOT NULL
             );
+
+            CREATE TABLE IF NOT EXISTS links (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                label TEXT NOT NULL,
+                url TEXT DEFAULT '',
+                icon TEXT DEFAULT 'bi-link-45deg',
+                style TEXT DEFAULT 'teal',
+                sort_order INTEGER DEFAULT 0,
+                created_at TEXT NOT NULL
+            );
             """
         )
         for key, value in PROFILE_DEFAULTS.items():
@@ -69,6 +79,20 @@ def init_db():
                         item.get("emoji", "🖼️"),
                         "",
                         item.get("gradient", ""),
+                        index,
+                        _now(),
+                    ),
+                )
+        if conn.execute("SELECT COUNT(*) AS c FROM links").fetchone()["c"] == 0:
+            for index, item in enumerate(LINK_DEFAULTS):
+                conn.execute(
+                    "INSERT INTO links (label, url, icon, style, sort_order, created_at) "
+                    "VALUES (?, ?, ?, ?, ?, ?)",
+                    (
+                        item.get("label", ""),
+                        item.get("url", ""),
+                        item.get("icon", "bi-link-45deg"),
+                        item.get("style", "teal"),
                         index,
                         _now(),
                     ),
@@ -278,6 +302,64 @@ def delete_gallery(item_id):
         conn.close()
 
 
+# ----------------------------- links -----------------------------
+
+def list_links():
+    conn = get_conn()
+    try:
+        rows = conn.execute(
+            "SELECT * FROM links ORDER BY sort_order ASC, id ASC"
+        ).fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def get_link(link_id):
+    conn = get_conn()
+    try:
+        row = conn.execute("SELECT * FROM links WHERE id = ?", (link_id,)).fetchone()
+        return dict(row) if row else None
+    finally:
+        conn.close()
+
+
+def create_link(label, url="", icon="bi-link-45deg", style="teal", sort_order=0):
+    conn = get_conn()
+    try:
+        cur = conn.execute(
+            "INSERT INTO links (label, url, icon, style, sort_order, created_at) "
+            "VALUES (?, ?, ?, ?, ?, ?)",
+            (label, url, icon, style, sort_order, _now()),
+        )
+        conn.commit()
+        return cur.lastrowid
+    finally:
+        conn.close()
+
+
+def update_link(link_id, label, url="", icon="bi-link-45deg", style="teal", sort_order=0):
+    conn = get_conn()
+    try:
+        conn.execute(
+            "UPDATE links SET label = ?, url = ?, icon = ?, style = ?, sort_order = ? "
+            "WHERE id = ?",
+            (label, url, icon, style, sort_order, link_id),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def delete_link(link_id):
+    conn = get_conn()
+    try:
+        conn.execute("DELETE FROM links WHERE id = ?", (link_id,))
+        conn.commit()
+    finally:
+        conn.close()
+
+
 def stats():
     conn = get_conn()
     try:
@@ -287,11 +369,13 @@ def stats():
             "SELECT COUNT(*) AS c FROM messages WHERE approved = 0"
         ).fetchone()["c"]
         gallery_count = conn.execute("SELECT COUNT(*) AS c FROM gallery").fetchone()["c"]
+        link_count = conn.execute("SELECT COUNT(*) AS c FROM links").fetchone()["c"]
         return {
             "diary_count": diary_count,
             "message_total": msg_total,
             "message_pending": msg_pending,
             "gallery_count": gallery_count,
+            "link_count": link_count,
         }
     finally:
         conn.close()

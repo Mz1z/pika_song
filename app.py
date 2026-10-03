@@ -4,7 +4,6 @@ import database as db
 from config import (
     BILIBILI_LIVE,
     BILIBILI_SPACE,
-    LINK_DEFAULTS,
     SECRET_KEY,
     SITE_DESCRIPTION,
     SITE_NAME,
@@ -36,7 +35,6 @@ def create_app():
                 "live": BILIBILI_LIVE,
             },
             "profile": db.get_profile(),
-            "links": LINK_DEFAULTS,
         }
 
     return app
